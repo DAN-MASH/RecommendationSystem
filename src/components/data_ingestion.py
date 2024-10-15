@@ -5,6 +5,8 @@ from src.logger import logging
 from src.exception import CustomException
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
 
 #decorator
 @dataclass
@@ -51,5 +53,8 @@ if __name__=="__main__":
     ingestion=DataIngestion()
     train_data, test_data=ingestion.initiate_data_ingestion()
     logging.info(f"Data ingestion completed. Train data at: {train_data}, Test data at: {test_data}")
+
+    data_transformation=DataIngestionConfig()
+    train_array,test_array,_=data_transformation.initiate_data_transformation(train_data,test_data)
                
 
