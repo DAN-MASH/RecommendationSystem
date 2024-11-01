@@ -1,60 +1,60 @@
 import sys
 import pandas as pd
 import os
+import requests 
+
 from src.logger import logging
 from src.exception import CustomException
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
-from src.components.data_transformation import DataTransformation
-from src.components.data_transformation import DataTransformationConfig
+#from src.components.data_transformation import DataTransformation
+#from src.components.data_transformation import DataTransformationConfig
 
 #decorator
+
 @dataclass
-class DataIngestionConfig():
-    #artifact folder to store the data
-    #proived data ngestion with information on where to store the data
-    raw_data_path: str = os.path.join('artifacts','raw_data.csv')
-    train_data_path:str=os.path.join('artifacts','train_data.csv')
-    test_data_path:str=os.path.join('artifacts','test_data.csv')
-    
+class DataIngestionConfig:
+    #artifacts to store the data and the datapaths as strings
+    raw_data_path:str=os.path.join('artifacts','raw_data.csv')
 
-class DataIngestion():
-   def __init__self(self):
-       self.config=DataIngestionConfig()
+#Data ingestion class
+class DataIngestion:
+    def __init__(self):
+        self.config=DataIngestionConfig()
+    def fetch_data(self):
+        try:
+            url="https://techtales.vercel.app/api/blogs"
+            response=requests.get(url)
+            df=response.json()
+            #convert the json data to dataframe
+            data=pd.json_normalize(df)
+
+        except Exception as e:
+            logging.info("Failed to get data from API: {e}")
+            raise CustomException(e,sys)
        
-       def initiate_data_ingestion(self):
-           logging.info("Start the data ingestion")
-           try:
-               #Step1: read the raw data
-               logging.info("reading raw data")
-               df=pd.read(self.config.raw_data_path)
-               logging.info(f"Raw data shape: {df.shape}")
-               #save raw data to csv
-               df.to_csv(self.config.raw_data_path,index=False)
-               
-               #step 2: Split the data to train and test set
-               logging.info("Initiate Train test split")
-               train_set, test_set=train_test_split(df, test_size=0.2,random_state=42)
-               logging.info(f"train_set shape: {train_set.shape}")
-               logging.info(f"test_set shape: {test_set.shape}")
-               #step 3 save the train and test data as csv
-               #make the train data path directort
-               os.makedirs(os.path.dirname(self.config.train_data_path), exist_ok=True)
-               train_set.to_csv(self.config.train_data_path, index=False)
-               test_set.to_csv(self.config.test_data_path, index=False)
-               logging.info(f"Train and test sets saved at {self.config.train_data_path} and {self.config.test_data_path}")
-               return self.config.train_data_path, self.config.test_data_path
-           
-           except Exception as e:
-               logging.info(f"Error occured during ingestion: {e}")
-               raise CustomException(e, sys)
-           
-if __name__=="__main__":
-    ingestion=DataIngestion()
-    train_data, test_data=ingestion.initiate_data_ingestion()
-    logging.info(f"Data ingestion completed. Train data at: {train_data}, Test data at: {test_data}")
+    def initiate_data_ingestion(self):
+        try:
+            logging.info("Start data ingestion")
+            #stpe 1: Fetch the data from the API
+            data=self.fetch_data()
+            #step 2: converrt the data into a dataframe
+            #data=pd.DataFrame(data)
+            df = pd.read_json(self.config.raw_data_path)
+            #make sure the directort exists
+            os.makedirs(os.path.dirname(self.raw_data_path),exist_ok=True)
+            #save the data as csv
+            df.to_csv(self.config.raw_data_path,index=False)
+            logging.info("Data ingestion completed.{\n} Data shape: {df.shape}")
+            return self.config.raw_data_path
+        except Exception as e:
+            logging.info("Error occured during data ingestion")
+            raise CustomException(e,sys)
 
-    data_transformation=DataIngestionConfig()
-    train_array,test_array,_=data_transformation.initiate_data_transformation(train_data,test_data)
+
+if __name__=="__main__":
+    ingestion=DataIngestionConfig()
+    raw_data=ingestion.initiate_data_ingestion()
+    logging.info("Data ingestion completed.Data at: {raw_data}")
                
 
