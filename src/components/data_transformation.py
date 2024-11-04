@@ -81,11 +81,11 @@ class DataTransformation:
             logging.info("start the data transformation process")
             preprocessor_obj=self.get_data_transformation_object()
             input_train_features_transformed=preprocessor_obj.fit_transform(input_train_features)
-            input_test_features_transformed=preprocessor_obj.fit_transform(input_test_features)
+            input_test_features_transformed=preprocessor_obj.transform(input_test_features)
             logging.info("Data transformation completed")
             #combine the feature and target data
             train_arr=np.c_[
-                input_test_features_transformed,np.array(target_train)
+                input_train_features_transformed,np.array(target_train)
             ]
             test_arr=np.c_[
                 input_test_features_transformed,np.array(target_test)

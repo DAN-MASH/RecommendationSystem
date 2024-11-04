@@ -16,9 +16,10 @@ def save_object(file_path,obj):
     try:
         #make sure the directory exists
         dir_path=os.dirname(file_path)
-        os.makedirs(dir_path,exist_ok=True)
+        dir_path=os.makedirs(dir_path,exist_ok=True)
 
-        with open (file_path ,"wb") as file_obj:
+        #save the file obj
+        with open (file_path,"wb") as file_obj:
             dill.dump(obj,file_obj)
 
     except Exception as e:
