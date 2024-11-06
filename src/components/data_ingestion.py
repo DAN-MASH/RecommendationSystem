@@ -5,11 +5,13 @@ import requests
 
 from src.logger import logging
 from src.exception import CustomException
-#from src.utils import save_object
+from src.utils import save_object
+from src.utils import evaluation_models
 #from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
-#from src.components.data_transformation import DataTransformation
-#from src.components.data_transformation import DataTransformationConfig
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
+
 
 #decorator
 
@@ -69,5 +71,8 @@ if __name__=="__main__":
     ingestion=DataIngestion()
     raw_data,train_data=ingestion.initiate_data_ingestion()
     logging.info(f"Data ingestion completed.Data at: {raw_data}.Train data at:{train_data}")
-               
 
+
+    data_tranformation=DataTransformation()
+    transformed_data,transformation_obj,transformed_data_path=data_tranformation.initiate_data_transformation(train_data)
+    logging.info(f"Data transformation completed. Transformed data saved at: {transformed_data}. Transformation object saved at: {transformation_obj}")

@@ -15,7 +15,7 @@ from sklearn.model_selection import GridSearchCV
 def save_object(file_path,obj):
     try:
         #make sure the directory exists
-        dir_path=os.dirname(file_path)
+        dir_path=os.path.dirname(file_path)
         dir_path=os.makedirs(dir_path,exist_ok=True)
 
         #save the file obj
