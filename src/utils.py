@@ -7,7 +7,6 @@ import pickle
 import dill
 
 from src.exception import CustomException
-from src.components import model_trainer
 from sklearn.metrics import r2_score
 from sklearn.model_selection import GridSearchCV
 

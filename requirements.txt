@@ -6,4 +6,5 @@ catboost
 xgboost
 dill
 requests
+scipy
 #-e .

@@ -5,12 +5,14 @@ import requests
 
 from src.logger import logging
 from src.exception import CustomException
-from src.utils import save_object
-from src.utils import evaluation_models
+#from src.utils import save_object
+#from src.utils import evaluation_models
 #from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
+from src.components.model_trainer import ModelTrainer
+from src.components.model_trainer import ModelTrainerConfig
 
 
 #decorator
@@ -76,3 +78,10 @@ if __name__=="__main__":
     data_tranformation=DataTransformation()
     transformed_data,transformation_obj,transformed_data_path=data_tranformation.initiate_data_transformation(train_data)
     logging.info(f"Data transformation completed. Transformed data saved at: {transformed_data}. Transformation object saved at: {transformation_obj}")
+
+    trainer=ModelTrainer()
+    recommendation=trainer.get_content_recommendation(blog_id=33, transformed_data=transformed_data,
+                                                      top_n=5)
+    logging.info(f"Recommendations for Blog ID: {recommendation}")
+    
+    
